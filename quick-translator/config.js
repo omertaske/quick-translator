@@ -1,0 +1,2 @@
+const API_KEY = 'AIzaSyAxXQw7LM_oRP73BcFO35IUSf7cY9Ju1TA';
+window.API_KEY = API_KEY; 

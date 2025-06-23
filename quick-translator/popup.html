@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      width: 300px;
+      padding: 15px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      transition: all 0.3s ease;
+    }
+    body.dark-mode {
+      background: #1a1a1a;
+      color: #fff;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    select, .theme-switch {
+      width: 100%;
+      padding: 8px;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+      background: white;
+      margin-bottom: 10px;
+    }
+    .dark-mode select, .dark-mode .theme-switch {
+      background: #333;
+      color: #fff;
+      border-color: #444;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    .save-btn {
+      background: #4285F4;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+    }
+    .save-btn:hover {
+      background: #3367D6;
+    }
+    .dark-mode .save-btn {
+      background: #5c9aff;
+    }
+    .dark-mode .save-btn:hover {
+      background: #4285F4;
+    }
+    .switch-container {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    .switch-label {
+      margin-left: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-group">
+    <label for="targetLang">Çeviri Dili:</label>
+    <select id="targetLang">
+      <option value="tr">Türkçe</option>
+      <option value="en">İngilizce</option>
+      <option value="de">Almanca</option>
+      <option value="fr">Fransızca</option>
+      <option value="es">İspanyolca</option>
+      <option value="it">İtalyanca</option>
+      <option value="ru">Rusça</option>
+      <option value="ar">Arapça</option>
+      <option value="ja">Japonca</option>
+      <option value="ko">Korece</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <label>Tema:</label>
+    <select id="themeSelect" class="theme-switch">
+      <option value="light">Açık Tema</option>
+      <option value="dark">Koyu Tema</option>
+      <option value="system">Sistem Teması</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <label>Geçmiş & Favoriler</label>
+    <div class="history-container" id="historyContainer">
+        <!-- Geçmiş öğeleri buraya dinamik olarak eklenecek -->
+    </div>
+  </div>
+  <div class="form-group">
+    <label>Kelime Öğrenme</label>
+    <div class="learning-stats">
+        <div class="stat-item">
+            <span class="stat-label">Öğrenilen Kelimeler:</span>
+            <span class="stat-value" id="learnedWords">0</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">Günlük Hedef:</span>
+            <span class="stat-value" id="dailyGoal">10</span>
+            <button class="small-btn" id="editGoal">✏️</button>
+        </div>
+    </div>
+    <div class="word-list" id="wordList">
+        <!-- Kelimeler buraya dinamik olarak eklenecek -->
+    </div>
+  </div>
+  <div class="form-group">
+    <label>İstatistikler</label>
+    <div class="stats-container">
+        <div class="stats-row">
+            <div class="stat-box">
+                <div class="stat-title">Toplam Çeviri</div>
+                <div class="stat-value" id="totalTranslations">0</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-title">Bugün</div>
+                <div class="stat-value" id="todayTranslations">0</div>
+            </div>
+        </div>
+        <div class="stats-row">
+            <div class="stat-box">
+                <div class="stat-title">Kelime Kartları</div>
+                <div class="stat-value" id="totalFlashcards">0</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-title">Öğrenilen</div>
+                <div class="stat-value" id="learnedFlashcards">0</div>
+            </div>
+        </div>
+        <div class="progress-section">
+            <div class="progress-label">Günlük İlerleme</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="dailyProgressBar"></div>
+            </div>
+            <div class="progress-text">
+                <span id="progressPercent">0%</span>
+                <span id="progressCount">0/10</span>
+            </div>
+        </div>
+    </div>
+    <div class="feedback-section">
+        <div class="rating-container">
+            <div class="rating-label">Çeviri Kalitesi</div>
+            <div class="rating-stars">
+                <span class="star" data-rating="1">★</span>
+                <span class="star" data-rating="2">★</span>
+                <span class="star" data-rating="3">★</span>
+                <span class="star" data-rating="4">★</span>
+                <span class="star" data-rating="5">★</span>
+            </div>
+        </div>
+        <textarea id="feedbackText" placeholder="Geri bildiriminizi yazın..."></textarea>
+        <button class="feedback-btn" id="sendFeedback">Gönder</button>
+    </div>
+  </div>
+  <div class="form-group">
+    <label>Görünüm Ayarları</label>
+    <div class="appearance-settings">
+        <div class="setting-row">
+            <label>Font Boyutu</label>
+            <select id="fontSize">
+                <option value="small">Küçük</option>
+                <option value="medium" selected>Orta</option>
+                <option value="large">Büyük</option>
+            </select>
+        </div>
+        <div class="setting-row">
+            <label>Çeviri Kutusu Konumu</label>
+            <select id="popupPosition">
+                <option value="cursor">İmleç Yanı</option>
+                <option value="center">Ekran Ortası</option>
+                <option value="corner">Sağ Alt Köşe</option>
+            </select>
+        </div>
+        <div class="setting-row">
+            <label>Özel Tema Rengi</label>
+            <input type="color" id="themeColor" value="#4285F4">
+        </div>
+        <div class="setting-row">
+            <label>Animasyonlar</label>
+            <div class="toggle-switch">
+                <input type="checkbox" id="animations" checked>
+                <span class="toggle-slider"></span>
+            </div>
+        </div>
+        <div class="setting-row">
+            <label>Otomatik Kapatma Süresi</label>
+            <select id="autoClose">
+                <option value="0">Kapalı</option>
+                <option value="3000">3 saniye</option>
+                <option value="5000">5 saniye</option>
+                <option value="10000">10 saniye</option>
+            </select>
+        </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <label>Offline Mod</label>
+    <div class="offline-settings">
+        <div class="setting-row">
+            <label>Offline Mod</label>
+            <div class="toggle-switch">
+                <input type="checkbox" id="offlineMode">
+                <span class="toggle-slider"></span>
+            </div>
+        </div>
+        <div class="setting-row">
+            <label>Önbellek Boyutu</label>
+            <select id="cacheSize">
+                <option value="100">100 çeviri</option>
+                <option value="500">500 çeviri</option>
+                <option value="1000">1000 çeviri</option>
+                <option value="5000">5000 çeviri</option>
+            </select>
+        </div>
+        <div class="cache-stats">
+            <div class="stat-item">
+                <span class="stat-label">Önbellekteki Çeviriler:</span>
+                <span class="stat-value" id="cachedTranslations">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Kullanılan Alan:</span>
+                <span class="stat-value" id="cacheSize">0 MB</span>
+            </div>
+        </div>
+        <button class="secondary-btn" id="clearCache">Önbelleği Temizle</button>
+        <button class="secondary-btn" id="downloadOfflineData">Çevrimdışı Verileri İndir</button>
+    </div>
+  </div>
+  <button class="save-btn" id="saveSettings">Kaydet</button>
+  <script src="popup.js"></script>
+</body>
+</html> 
